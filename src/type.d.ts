@@ -1,5 +1,6 @@
+export as namespace myLib
 export interface Pizza {
-  size: string
+  size: Size
   price: number
   toppings: Topping[]
   totalPrice: number
@@ -18,3 +19,5 @@ export interface Order {
   products: Pizza[]
   total: number
 }
+
+export type Size = 'large' | 'medium' | 'small'

@@ -36,7 +36,20 @@ const formReducer = (
 }
 
 const useNewOrderDataForm = () => {
-  return useReducer(formReducer, INITIAL_STATE)
+  const [inputValues, dispatch] = useReducer(formReducer, INITIAL_STATE)
+
+  const changeValue = (name: string, value: string) => {
+    dispatch({
+      type: 'change_value',
+      payload: { inputName: name, inputValue: value },
+    })
+  }
+  const clearAllInputs = () => {
+    dispatch({
+      type: 'clear',
+    })
+  }
+  return { inputValues, changeValue, clearAllInputs }
 }
 
 export default useNewOrderDataForm

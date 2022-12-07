@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import {
   AiOutlineMessage,
   AiOutlineBell,
@@ -6,7 +6,6 @@ import {
   AiFillAppstore,
   AiOutlineCreditCard,
 } from 'react-icons/ai'
-
 import store from './redux/store'
 
 import { BsBoxSeam } from 'react-icons/bs'
@@ -14,6 +13,7 @@ import './App.css'
 import { Provider } from 'react-redux'
 
 function PizzaApp() {
+  const navigate = useNavigate()
   return (
     <Provider store={store}>
       <div className='bg-white'>
@@ -31,14 +31,23 @@ function PizzaApp() {
           </nav>
           <div className='px-4 mt-24 '>
             <ul className='flex-row space-y-3  border-b w-36 pb-7 border-blue-500'>
-              <button className='flex items-center space-x-2 hover:border-l-4 p-1 pl-3 hover:bg-gradient-to-r hover:from-blue-900'>
+              <button
+                onClick={() => navigate('/orders/dashboard')}
+                className='flex items-center space-x-2 hover:border-l-4 p-1 pl-3 hover:bg-gradient-to-r hover:from-blue-900'
+              >
                 <AiFillAppstore />
-                <span>New Order</span>
+                <span>Dashboard</span>
               </button>
-              <button className='flex items-center space-x-2 hover:border-l-4 p-1 pl-3 hover:bg-gradient-to-r hover:from-blue-900'>
+              <button
+                onClick={() => navigate('/orders/new')}
+                className='flex items-center space-x-2 hover:border-l-4 p-1 pl-3 hover:bg-gradient-to-r hover:from-blue-900'
+              >
                 <AiOutlineCreditCard /> <span>New Order</span>
               </button>
-              <button className='flex items-center space-x-2 hover:border-l-4 p-1 pl-3 hover:bg-gradient-to-r hover:from-blue-900'>
+              <button
+                onClick={() => navigate('/orders/manage')}
+                className='flex items-center space-x-2 hover:border-l-4 p-1 pl-3 hover:bg-gradient-to-r hover:from-blue-900'
+              >
                 <BsBoxSeam />
                 <span>Status</span>
               </button>

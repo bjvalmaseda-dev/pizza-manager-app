@@ -7,7 +7,7 @@ import { PizzaForm } from './PizzaForm'
 
 export const OrderForm = () => {
   const { pizzas, addPizza, removePizza, updatePizza, reset } = usePizzasForm()
-  const [inputValues, dispatch] = useNewOrderDataForm()
+  const { inputValues, changeValue, clearAllInputs } = useNewOrderDataForm()
 
   const calculateTotalOrder = () =>
     pizzas.reduce((sum, value) => sum + value.totalPrice, 0)
@@ -25,22 +25,18 @@ export const OrderForm = () => {
     }
 
     reset()
-    dispatch({ type: 'clear' })
+    clearAllInputs()
     console.log(newOrder)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    dispatch({
-      type: 'change_value',
-      payload: { inputName: name, inputValue: value },
-    })
+    changeValue(name, value)
   }
 
   return (
     <div>
       <h1 className='uppercase text-2xl font-semibold mb-4'>Pizza Order</h1>
-      {calculateTotalOrder()}
       <form action=''>
         <p className='border-b-2 pb-2 mb-6'>Basic Information</p>
         <fieldset>

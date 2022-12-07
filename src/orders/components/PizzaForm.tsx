@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from 'react'
-import { AiFillCaretUp } from 'react-icons/ai'
-import { Pizza, Topping } from '../../type'
+import React, { useState } from 'react'
+import { AiFillCaretUp, AiFillCaretDown } from 'react-icons/ai'
+import { RadioSize } from '../../shares/RadioSize'
+import { CheckToppings } from '../../shares/CheckToppings'
+import { Pizza, Size, Topping } from '../../type'
 
 const toppings: Topping[] = [
   { name: 'Bacon', price: 0.99 },
   { name: 'Mushroom', price: 0.99 },
+  { name: 'Pepperoni', price: 0.99 },
   { name: 'Olive', price: 0.99 },
   { name: 'Basil', price: 0.99 },
   { name: 'Sweetcorn', price: 0.99 },
   { name: 'Onion', price: 0.99 },
   { name: 'Tomato', price: 0.99 },
 ]
-const prices = [19.9, 23.9, 27.9]
+const prices = { large: 20.0, medium: 15.0, small: 9.5 }
 
 interface Props {
   pizza: Pizza
@@ -22,26 +25,39 @@ interface Props {
 }
 
 export const PizzaForm = ({ pizza, index, remove, update }: Props) => {
-  const [extras, setExtras] = useState<Topping[]>([])
+  const [show, setShow] = useState<boolean>(true)
+  const [checkedState, setCheckedState] = useState(
+    new Array(toppings.length).fill(false)
+  )
+  const [size, setSize] = useState<string>('large')
 
-  const handleCheckedTopping = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    option: Topping
-  ) => {
-    const checked = e.target.checked
-    console.log(checked)
+  const handleOnChangeExtras = (position: number) => {
+    const updatedCheckedState = checkedState.map((item: boolean, index) =>
+      index === position ? !item : item
+    )
 
-    if (checked) {
-      setExtras([...extras, option])
-      console.log(extras)
-    } else {
-      setExtras(extras.filter(o => o.name !== option.name))
-    }
+    setCheckedState(updatedCheckedState)
+    const extras: Topping[] = updatedCheckedState
+      .map((value: boolean, index) => (value ? toppings[index] : null))
+      .filter(value => value !== null) as Topping[]
+
     update({ ...pizza, toppings: extras }, index)
   }
 
+  const handleOnChangeSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.target
+    const size = target.value as Size
+
+    if (target.checked) {
+      update({ ...pizza, size, price: prices[size] }, index)
+    }
+  }
   const handleRemovePizza = () => {
     remove(index)
+  }
+
+  const toggleShow = () => {
+    setShow(!show)
   }
 
   return (
@@ -56,35 +72,66 @@ export const PizzaForm = ({ pizza, index, remove, update }: Props) => {
           >
             Remove Pizza
           </button>
-          <AiFillCaretUp />
+          {show ? (
+            <AiFillCaretUp onClick={toggleShow} />
+          ) : (
+            <AiFillCaretDown onClick={toggleShow} />
+          )}
         </div>
       </div>
-      <div className='p-4'>
-        <p className='mb-4'>Choose your size</p>
-        <input type='radio' name='size' value='large' />
-        Large
-        <input type='radio' name='size' value='medium' /> Medium
-        <input type='radio' name='size' value='small' />
-        Small
-      </div>
-      <div className='p-4'>
-        <p className='mb-4'>Pick your toppings</p>
-        <ul>
-          {toppings.map((option, i) => {
-            return (
-              <li key={`pizza-${index}-option-${i}`}>
-                <input
-                  type='checkbox'
-                  id={`pizza-${index}-${option.name}`}
-                  name={`pizza-${index}-${option.name}`}
-                  onChange={e => handleCheckedTopping(e, option)}
-                />
-                <label htmlFor={option.name}>{option.name}</label>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+      {show ? (
+        <>
+          {' '}
+          <div className='p-4'>
+            <p className='mb-4'>Choose your size</p>
+            <div className='flex gap-4'>
+              <RadioSize
+                id={`pizza-${index}-large`}
+                name='size'
+                label='Large'
+                value='large'
+                checked={pizza.size === 'large'}
+                onChange={handleOnChangeSize}
+              />
+              <RadioSize
+                id={`pizza-${index}-medium`}
+                name='size'
+                label='medium'
+                value='medium'
+                checked={pizza.size === 'medium'}
+                onChange={handleOnChangeSize}
+              />
+              <RadioSize
+                id={`pizza-${index}-small`}
+                name='size'
+                label='small'
+                value='small'
+                checked={pizza.size === 'small'}
+                onChange={handleOnChangeSize}
+              />
+            </div>
+          </div>
+          <div className='p-4'>
+            <p className='mb-4'>Pick your toppings</p>
+            <ul className='grid grid-cols-4 gap-4'>
+              {toppings.map((option, i) => {
+                return (
+                  <li key={`pizza-${index}-option-${i}`}>
+                    <CheckToppings
+                      id={`pizza-${index}-${option.name}`}
+                      label={option.name}
+                      checked={checkedState[i]}
+                      onChange={() => handleOnChangeExtras(i)}
+                    />
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        </>
+      ) : (
+        ''
+      )}
     </>
   )
 }
