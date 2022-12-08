@@ -12,12 +12,17 @@ export interface Topping {
 }
 
 export interface Order {
+  id
   name: string
   address: string
+  date: string
   email: string
   phone: string
   products: Pizza[]
   total: number
+  status: Status
 }
 
 export type Size = 'large' | 'medium' | 'small'
+
+export type Status = 'ACCEPTED' | 'COMPLETED' | 'PENDING' | 'CANCELLED'

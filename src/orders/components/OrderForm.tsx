@@ -1,13 +1,23 @@
+import { useMutation } from '@apollo/client'
 import React from 'react'
 import useNewOrderDataForm from '../../hooks/useNewOrderDataForm'
 import usePizzasForm from '../../hooks/usePizzasForm'
 import { Order } from '../../type'
+import { ADD_ORDER } from '../graphql-mutations'
+import { ALL_ORDERS } from '../graphql-queries'
 import { OrderSummary } from './OrderSummary'
 import { PizzaForm } from './PizzaForm'
 
 export const OrderForm = () => {
   const { pizzas, addPizza, removePizza, updatePizza, reset } = usePizzasForm()
   const { inputValues, changeValue, clearAllInputs } = useNewOrderDataForm()
+
+  const [addOrder] = useMutation(ADD_ORDER, {
+    onError: error => {
+      console.log(error)
+    },
+    refetchQueries: [{ query: ALL_ORDERS }],
+  })
 
   const calculateTotalOrder = () =>
     pizzas.reduce((sum, value) => sum + value.totalPrice, 0)
@@ -16,17 +26,16 @@ export const OrderForm = () => {
     addPizza({ size: 'large', price: 25.0, totalPrice: 25.0, toppings: [] })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const newOrder: Order = {
       ...inputValues,
       products: pizzas,
       total: calculateTotalOrder(),
     }
-
+    await addOrder({ variables: { ...newOrder } })
     reset()
     clearAllInputs()
-    console.log(newOrder)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,6 +125,7 @@ export const OrderForm = () => {
           <button
             type='submit'
             className='px-4 py-1 border-blue-500 text-blue-500 border rounded-sm'
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={handleSubmit}
           >
             Place order

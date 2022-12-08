@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { NewOrder } from '../orders/views'
+import { Orders } from '../orders/views/Orders'
 import PizzaApp from '../PizzaApp'
 
 export const router = createBrowserRouter([
@@ -8,7 +9,7 @@ export const router = createBrowserRouter([
     element: <PizzaApp />,
     children: [
       { path: 'new', element: <NewOrder /> },
-      { path: 'manage', element: <div>Manage order</div> },
+      { path: 'manage', element: <Orders /> },
       { path: 'dashboard', element: <div>Dashboard</div> },
     ],
   },
