@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react'
 import { AiFillCaretUp, AiFillCaretDown } from 'react-icons/ai'
-import { RadioSize } from '../../shares/RadioSize'
-import { CheckToppings } from '../../shares/CheckToppings'
+import { RadioSize } from './RadioSize'
+import { CheckToppings } from './CheckToppings'
 import { Pizza, Size, Topping } from '../../type'
 
 const toppings: Topping[] = [
