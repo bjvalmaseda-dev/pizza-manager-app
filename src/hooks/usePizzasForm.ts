@@ -34,9 +34,12 @@ const pizzaReducer = (state: State, action: ReducerAction) => {
           i === action.payload.index
             ? {
                 ...pizza,
-                totalPrice:
-                  pizza.price +
-                  pizza.toppings.reduce((sum, value) => sum + value.price, 0),
+                totalPrice: Number(
+                  (
+                    pizza.price +
+                    pizza.toppings.reduce((sum, value) => sum + value.price, 0)
+                  ).toFixed(2)
+                ),
               }
             : p
         ),
