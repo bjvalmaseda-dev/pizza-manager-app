@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client'
 import { Order, Status } from '../../type'
-import { humanDiffDate } from '../../utils'
 import { CHANGE_ORDER_STATUS } from '../graphql-mutations'
+import moment from 'moment'
 
 interface Props {
   orders: Order[]
@@ -56,7 +56,7 @@ export const OrderList = ({ orders }: Props) => {
               {order.address}
             </td>
             <td className='text-gray-900 font-light px-6 py-2 whitespace-nowrap'>
-              {humanDiffDate(new Date(order.date))}
+              {moment(order.date).fromNow()}
             </td>
             <td className='text-gray-900 font-light px-6 py-2 whitespace-nowrap'>
               {order.status === 'PENDING' && (

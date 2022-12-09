@@ -2,11 +2,10 @@ import { OrderList } from '../components/OrderList'
 import { useOrders } from '../../hooks/useOrders'
 
 export const Orders = () => {
-  const { error, data, loading, delivered, pending, cancelled, orders } =
+  const { error, loading, delivered, pending, cancelled, sortedOrders } =
     useOrders()
 
   if (error != null) return <span>{error.message}</span>
-  console.log(data)
 
   return (
     <div>
@@ -16,7 +15,7 @@ export const Orders = () => {
             Total items in inventory
             <div className='mt-2'>
               <span className='text-blue-500 text-2xl mr-1'>
-                {orders.length}
+                {sortedOrders.length}
               </span>
               <span className='text-sm text-gray-400'>items</span>
             </div>
@@ -24,17 +23,19 @@ export const Orders = () => {
               <div
                 className={`bg-green-500 h-2 rounded-l-full`}
                 style={{
-                  width: `${(delivered.length / orders?.length) * 100}%`,
+                  width: `${(delivered.length / sortedOrders?.length) * 100}%`,
                 }}
               ></div>
               <div
                 className={`bg-blue-500 h-2`}
-                style={{ width: `${(pending.length / orders?.length) * 100}%` }}
+                style={{
+                  width: `${(pending.length / sortedOrders?.length) * 100}%`,
+                }}
               ></div>
               <div
                 className={`bg-pink-500 h-2 rounded-r-full `}
                 style={{
-                  width: `${(cancelled.length / orders?.length) * 100}%`,
+                  width: `${(cancelled.length / sortedOrders?.length) * 100}%`,
                 }}
               ></div>
             </div>
@@ -69,7 +70,7 @@ export const Orders = () => {
           </div>
         </div>
       </div>
-      {loading ? <p>Loading</p> : <OrderList orders={data.allOrders} />}
+      {loading ? <p>Loading</p> : <OrderList orders={sortedOrders} />}
     </div>
   )
 }

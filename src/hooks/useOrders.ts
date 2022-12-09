@@ -13,6 +13,11 @@ export const useOrders = () => {
   }
 
   const orders: Order[] = data?.allOrders ?? []
+
+  const sortedOrders = [...orders].sort((a, b) =>
+    moment(b.date).diff(moment(a.date))
+  )
+
   const pending = filterByStatus('PENDING')
   const delivered = filterByStatus('COMPLETED')
   const cancelled = filterByStatus('CANCELLED')
@@ -39,5 +44,6 @@ export const useOrders = () => {
     cancelled,
     totalSales,
     resume,
+    sortedOrders,
   }
 }
