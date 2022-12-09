@@ -4,6 +4,7 @@ interface Props {
   colorClass?: string
 }
 const CIRCLE = 60 * 2 * Math.PI
+
 export const Spin = ({ total, part, colorClass = 'text-blue-600' }: Props) => {
   const percent = Math.floor((part * 100) / total)
   return (
