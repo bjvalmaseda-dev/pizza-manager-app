@@ -11,7 +11,6 @@ import {
   ChartData,
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
-import { faker } from '@faker-js/faker'
 
 ChartJS.register(
   CategoryScale,
@@ -59,21 +58,27 @@ export const options: ChartOptions<'line'> = {
   },
 }
 
-const labels = ['January', 'February', 'March']
-
-export const data: ChartData<'line'> = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      fill: true,
-      tension: 0.4,
-      borderColor: '#FAAF6B',
-    },
-  ],
+interface DataChart {
+  labels: string[]
+  data: number[]
+}
+interface Props {
+  data: DataChart
 }
 
-export function LineChart() {
-  return <Line options={options} data={data} />
+export function LineChart({ data }: Props) {
+  const dataToShow: ChartData<'line'> = {
+    labels: data.labels,
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: data.data,
+        fill: true,
+        tension: 0.4,
+        borderColor: '#FAAF6B',
+      },
+    ],
+  }
+
+  return <Line options={options} data={dataToShow} />
 }

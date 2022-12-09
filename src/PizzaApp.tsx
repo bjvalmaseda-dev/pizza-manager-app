@@ -11,9 +11,11 @@ import store from './redux/store'
 import { BsBoxSeam } from 'react-icons/bs'
 import './App.css'
 import { Provider } from 'react-redux'
+import { useSubscriptions } from './hooks/useSubscriptions'
 
 function PizzaApp() {
   const navigate = useNavigate()
+  useSubscriptions()
   return (
     <Provider store={store}>
       <div className='bg-white'>

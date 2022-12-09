@@ -7,6 +7,7 @@ export const ALL_ORDERS = gql`
       address
       status
       date
+      total
     }
   }
 `

@@ -8,3 +8,14 @@ export const ORDER_UPDATED = gql`
     }
   }
 `
+export const ORDER_ADDED = gql`
+  subscription {
+    orderAdded {
+      id
+      address
+      status
+      date
+      total
+    }
+  }
+`

@@ -26,3 +26,12 @@ const localize = (value: number, str: string): string => {
 export const humanDiffDate = (date: Date): string => {
   return localize(...timeDiff(date))
 }
+
+export const isToday = (date: Date) => {
+  const today = new Date()
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  )
+}

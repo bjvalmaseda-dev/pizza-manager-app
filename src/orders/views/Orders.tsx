@@ -1,32 +1,9 @@
 import { OrderList } from '../components/OrderList'
 import { useOrders } from '../../hooks/useOrders'
-import { useSubscription } from '@apollo/client'
-import { ORDER_UPDATED } from '../graphql-subscriptions'
-import { ALL_ORDERS } from '../graphql-queries'
-import { Order } from '../../type'
-
-const useSubscriptions = (): void => {
-  useSubscription(ORDER_UPDATED, {
-    onData: ({ data, client }) => {
-      const { id, status } = data.data
-      const dataInStore = client.readQuery({ query: ALL_ORDERS })
-      client.writeQuery({
-        query: ALL_ORDERS,
-        data: {
-          ...dataInStore,
-          allPersons: dataInStore.allOrders.map((order: Order) =>
-            order.id === id ? { ...order, status } : order
-          ),
-        },
-      })
-    },
-  })
-}
 
 export const Orders = () => {
-  const { error, data, loading } = useOrders()
-
-  useSubscriptions()
+  const { error, data, loading, delivered, pending, cancelled, orders } =
+    useOrders()
 
   if (error != null) return <span>{error.message}</span>
   console.log(data)
@@ -37,6 +14,30 @@ export const Orders = () => {
         <div>
           <span className='text-sm text-gray-500'>
             Total items in inventory
+            <div className='mt-2'>
+              <span className='text-blue-500 text-2xl mr-1'>
+                {orders.length}
+              </span>
+              <span className='text-sm text-gray-400'>items</span>
+            </div>
+            <div className='w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700 flex'>
+              <div
+                className={`bg-green-500 h-2 rounded-l-full`}
+                style={{
+                  width: `${(delivered.length / orders?.length) * 100}%`,
+                }}
+              ></div>
+              <div
+                className={`bg-blue-500 h-2`}
+                style={{ width: `${(pending.length / orders?.length) * 100}%` }}
+              ></div>
+              <div
+                className={`bg-pink-500 h-2 rounded-r-full `}
+                style={{
+                  width: `${(cancelled.length / orders?.length) * 100}%`,
+                }}
+              ></div>
+            </div>
           </span>
         </div>
         <div>
@@ -50,21 +51,21 @@ export const Orders = () => {
           <div className='rounded-full bg-green-600 w-3 h-3'></div>
           <div>
             <p>Completed</p>
-            <span className='text-gray-500'>300</span>
+            <span className='text-gray-500'>{delivered.length}</span>
           </div>
         </div>
         <div className='flex items-center space-x-4'>
           <div className='rounded-full bg-blue-600 w-3 h-3'></div>
           <div>
             <p>Pending</p>
-            <span className='text-gray-500'>300</span>
+            <span className='text-gray-500'>{pending.length}</span>
           </div>
         </div>
         <div className='flex items-center space-x-4'>
           <div className='rounded-full bg-rose-500 w-3 h-3'></div>
           <div>
             <p>Cancelled</p>
-            <span className='text-gray-500'>300</span>
+            <span className='text-gray-500'>{cancelled.length}</span>
           </div>
         </div>
       </div>

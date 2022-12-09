@@ -2,9 +2,9 @@ import { useOrders } from '../../hooks/useOrders'
 import { Spin } from './Spin'
 
 export const OrderMeters = () => {
-  const { data } = useOrders()
+  const { orders, delivered, pending } = useOrders()
 
-  if (data === null) return null
+  if (orders === null) return null
 
   return (
     <>
@@ -12,17 +12,23 @@ export const OrderMeters = () => {
         <h1 className='uppercase font-semibold '>delivered status</h1>
         <div>
           <p>Total Orders</p>
-          <span className='font-extrabold text-2xl text'>
-            {data?.allOrders.length}
-          </span>
+          <span className='font-extrabold text-2xl text'>{orders.length}</span>
         </div>
         <div className='flex justify-between text-sm'>
           <div>
-            <Spin total={600} part={50} colorClass='text-green-500' />
+            <Spin
+              total={orders.length}
+              part={delivered.length}
+              colorClass='text-green-500'
+            />
             <span>Orders delivered</span>
           </div>
           <div>
-            <Spin total={600} part={565} colorClass='text-red-500' />
+            <Spin
+              total={orders.length}
+              part={pending.length}
+              colorClass='text-red-500'
+            />
             <span>Pending delivery</span>
           </div>
         </div>
