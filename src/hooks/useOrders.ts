@@ -1,16 +1,31 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { ALL_ORDERS } from '../orders/graphql-queries'
 import { Order, Status } from '../type'
 import moment from 'moment'
+import { useState } from 'react'
+import { ADD_ORDER } from '../orders/graphql-mutations'
+
+type MutationStatus = { status: 'error' | 'success'; message?: string } | null
 
 export const useOrders = () => {
   const { data, error, loading } = useQuery(ALL_ORDERS)
+  const [mutationStatus, setMutationStatus] = useState<MutationStatus>(null)
 
   const filterByStatus = (status: Status): Order[] => {
     if (!data?.allOrders) return []
     return data.allOrders.filter((order: Order) => order.status === status)
   }
+
+  const [addOrder] = useMutation(ADD_ORDER, {
+    refetchQueries: [{ query: ALL_ORDERS }],
+    onError: error => {
+      setMutationStatus({ status: 'error', message: error.message })
+    },
+    onCompleted: () => {
+      setMutationStatus({ status: 'success' })
+    },
+  })
 
   const orders: Order[] = data?.allOrders ?? []
 
@@ -35,7 +50,8 @@ export const useOrders = () => {
   )
 
   return {
-    data,
+    mutationStatus,
+    addOrder,
     error,
     loading,
     delivered,

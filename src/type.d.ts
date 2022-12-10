@@ -25,6 +25,6 @@ export interface Order {
 
 export type Size = 'large' | 'medium' | 'small'
 
-export interface OrderDto extends Omit<Order, 'id' | 'total' | 'products'> {}
+export type OrderDto = Omit<Order, 'id'>
 
 export type Status = 'ACCEPTED' | 'COMPLETED' | 'PENDING' | 'CANCELLED'

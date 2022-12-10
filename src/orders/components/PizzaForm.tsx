@@ -1,9 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiFillCaretUp, AiFillCaretDown } from 'react-icons/ai'
-import { RadioSize } from './RadioSize'
+import { OrderDto, Topping } from '../../type'
+import {
+  Control,
+  Controller,
+  UseFieldArrayRemove,
+  UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
+  useWatch,
+} from 'react-hook-form'
+import RadioButtonGroup from './RadioGroup'
 import { CheckToppings } from './CheckToppings'
-import { Pizza, Size, Topping } from '../../type'
 
 const toppings: Topping[] = [
   { name: 'Bacon', price: 0.99 },
@@ -15,21 +23,38 @@ const toppings: Topping[] = [
   { name: 'Onion', price: 0.99 },
   { name: 'Tomato', price: 0.99 },
 ]
-const prices = { large: 20.0, medium: 15.0, small: 9.5 }
+
+const prices = { large: 20.0, medium: 15.0, small: 9.0 }
+
+const types = Object.keys(prices).map(label => ({ label, name: 'pizza-type' }))
 
 interface Props {
-  pizza: Pizza
   index: number
-  remove: (i: number) => void
-  update: (pizza: Pizza, i: number) => void
+  remove: UseFieldArrayRemove
+  register: UseFormRegister<OrderDto>
+  control: Control<OrderDto, any>
+  setValue: UseFormSetValue<OrderDto>
+  getValues: UseFormGetValues<OrderDto>
 }
 
-export const PizzaForm = ({ pizza, index, remove, update }: Props) => {
+export const PizzaForm = ({
+  index,
+  control,
+  remove,
+  register,
+  setValue,
+  getValues,
+}: Props) => {
   const [show, setShow] = useState<boolean>(true)
+  const size = useWatch({ control, name: `products.${index}.size` })
+
+  useEffect(() => {
+    setValue(`products.${index}.price`, prices[size])
+  }, [size])
+
   const [checkedState, setCheckedState] = useState(
     new Array(toppings.length).fill(false)
   )
-  const [size, setSize] = useState<string>('large')
 
   const handleOnChangeExtras = (position: number) => {
     const updatedCheckedState = checkedState.map((item: boolean, index) =>
@@ -37,27 +62,14 @@ export const PizzaForm = ({ pizza, index, remove, update }: Props) => {
     )
 
     setCheckedState(updatedCheckedState)
+
     const extras: Topping[] = updatedCheckedState
       .map((value: boolean, index) => (value ? toppings[index] : null))
       .filter(value => value !== null) as Topping[]
 
-    update({ ...pizza, toppings: extras }, index)
-  }
-
-  const handleOnChangeSize = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target
-    const size = target.value as Size
-
-    if (target.checked) {
-      update({ ...pizza, size, price: prices[size] }, index)
-    }
-  }
-  const handleRemovePizza = () => {
-    remove(index)
-  }
-
-  const toggleShow = () => {
-    setShow(!show)
+    setValue(`products.${index}.toppings`, extras)
+    const extrasPrices = extras.reduce((acc, item) => acc + item.price, 0)
+    setValue(`products.${index}.totalPrice`, prices[size] + extrasPrices)
   }
 
   return (
@@ -67,49 +79,35 @@ export const PizzaForm = ({ pizza, index, remove, update }: Props) => {
         <div className='flex items-center gap-2'>
           <button
             type='button'
-            onClick={handleRemovePizza}
+            onClick={() => remove(index)}
             className='font-thin text-sm'
           >
             Remove Pizza
           </button>
           {show ? (
-            <AiFillCaretUp onClick={toggleShow} />
+            <AiFillCaretUp
+              className='cursor-pointer'
+              onClick={() => setShow(!show)}
+            />
           ) : (
-            <AiFillCaretDown onClick={toggleShow} />
+            <AiFillCaretDown
+              className='cursor-pointer'
+              onClick={() => setShow(!show)}
+            />
           )}
         </div>
       </div>
       {show ? (
         <>
-          {' '}
           <div className='p-4'>
             <p className='mb-4'>Choose your size</p>
-            <div className='flex gap-4'>
-              <RadioSize
-                id={`pizza-${index}-large`}
-                name='size'
-                label='Large'
-                value='large'
-                checked={pizza.size === 'large'}
-                onChange={handleOnChangeSize}
-              />
-              <RadioSize
-                id={`pizza-${index}-medium`}
-                name='size'
-                label='medium'
-                value='medium'
-                checked={pizza.size === 'medium'}
-                onChange={handleOnChangeSize}
-              />
-              <RadioSize
-                id={`pizza-${index}-small`}
-                name='size'
-                label='small'
-                value='small'
-                checked={pizza.size === 'small'}
-                onChange={handleOnChangeSize}
-              />
-            </div>
+            <Controller
+              name={`products.${index}.size`}
+              control={control}
+              render={({ field }) => (
+                <RadioButtonGroup options={types} {...field} />
+              )}
+            />
           </div>
           <div className='p-4'>
             <p className='mb-4'>Pick your toppings</p>

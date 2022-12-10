@@ -1,17 +1,19 @@
-import { Pizza } from '../../type'
+import { Control, useWatch } from 'react-hook-form'
+import { OrderDto } from '../../type'
 
 interface Props {
-  pizzas: Pizza[]
-  total: number
+  control: Control<OrderDto, any>
 }
 
-export const OrderSummary = ({ pizzas, total }: Props) => {
+export const OrderSummary = ({ control }: Props) => {
+  const products = useWatch({ control, name: `products` })
+  const total = useWatch({ control, name: `total` })
   return (
     <>
       <h1 className='text-xl text-gray-500 font-normal mb-4 border-b pb-2'>
         Summary
       </h1>
-      {pizzas.map((pizza, index) => {
+      {products.map((pizza, index) => {
         return (
           <div key={index} className='mb-4'>
             <div className='flex justify-between'>
