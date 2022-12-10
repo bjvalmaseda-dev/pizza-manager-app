@@ -68,7 +68,9 @@ export const PizzaForm = ({
       .filter(value => value !== null) as Topping[]
 
     setValue(`products.${index}.toppings`, extras)
-    const extrasPrices = extras.reduce((acc, item) => acc + item.price, 0)
+    const extrasPrices = Number(
+      extras.reduce((acc, item) => acc + item.price, 0).toFixed(2)
+    )
     setValue(`products.${index}.totalPrice`, prices[size] + extrasPrices)
   }
 

@@ -8,6 +8,10 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const CustomInput = ({ label, name, errors, ...rest }: Props) => {
+  let message = 'Everything was great'
+  if (errors[name]) {
+    const message = errors[name]?.message
+  }
   return (
     <div className='flex flex-col'>
       <label htmlFor='email' className='text-gray-500 text-sm mb-2'>
@@ -17,9 +21,7 @@ export const CustomInput = ({ label, name, errors, ...rest }: Props) => {
         {...rest}
         className={`border p-2 ${errors[name] ? 'border-red-500' : ''}`}
       />
-      {errors[name] && (
-        <span className='text-sm text-red-500'>{errors[name].message}</span>
-      )}
+      {errors[name] && <span className='text-sm text-red-500'>{message}</span>}
     </div>
   )
 }

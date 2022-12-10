@@ -2,7 +2,6 @@ import { useMutation } from '@apollo/client'
 import { Order, Status } from '../../type'
 import { CHANGE_ORDER_STATUS } from '../graphql-mutations'
 import moment from 'moment'
-
 interface Props {
   orders: Order[]
 }
@@ -51,7 +50,9 @@ export const OrderList = ({ orders }: Props) => {
       <tbody>
         {orders.map(order => (
           <tr className='bg-gray-100 odd:bg-white' key={order.id}>
-            <td className='px-6 py-2 whitespace-nowrap  text-gray-900'>1</td>
+            <td className='px-6 py-2 whitespace-nowrap uppercase text-gray-900'>
+              {order.id.slice(0, 8)}
+            </td>
             <td className='text-gray-900 font-light px-6 py-2 whitespace-nowrap'>
               {order.address}
             </td>
