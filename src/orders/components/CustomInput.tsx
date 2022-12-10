@@ -9,8 +9,9 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 
 export const CustomInput = ({ label, name, errors, ...rest }: Props) => {
   let message = 'Everything was great'
+
   if (errors[name]) {
-    const message = errors[name]?.message
+    message = (errors[name]?.message as string) ?? ''
   }
   return (
     <div className='flex flex-col'>
