@@ -15,11 +15,15 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { createClient } from 'graphql-ws'
 import { getMainDefinition } from '@apollo/client/utilities'
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL as string
+
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4025',
+  uri: BASE_URL,
 })
 
-const wsLink = new GraphQLWsLink(createClient({ url: 'ws://localhost:4025/' }))
+const wsLink = new GraphQLWsLink(
+  createClient({ url: BASE_URL.replace(/(http(s)?)/i, 'ws') })
+)
 
 const splitLink = split(
   ({ query }) => {
