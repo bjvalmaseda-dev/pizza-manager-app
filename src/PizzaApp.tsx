@@ -20,7 +20,10 @@ function PizzaApp() {
     <div className='bg-white'>
       <div className='bg-gradient-to-b from-blue-900 to-slate-900 text-white px-28 h-2/3 absolute top-0 w-screen'>
         <nav className='flex justify-between py-2 px-4'>
-          <div>
+          <div
+            onClick={() => navigate('/orders/new')}
+            className='cursor-pointer'
+          >
             <img src={Logo} alt='' />
           </div>
           <div className='flex items-center space-x-2 text-lg'>

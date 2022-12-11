@@ -4,8 +4,6 @@ import { LineChart } from './LineChart'
 export const OrderHistory = () => {
   const { resume } = useOrders()
 
-  if (resume.length < 1) return null
-
   const labels = Array(24)
     .fill('')
     .map((_, index) => (index < 10 ? `0${index}` : `${index}`))
@@ -17,8 +15,8 @@ export const OrderHistory = () => {
   })
 
   return (
-    <div className='flex flex-col items-center border-r border-gray-300 pr-2'>
-      <h1 className='uppercase mb-4'>Order History</h1>
+    <div className='flex flex-col items-center '>
+      <h1 className='uppercase mb-4 text-gray-800'>Order History</h1>
       <LineChart data={{ labels, data }} />
     </div>
   )

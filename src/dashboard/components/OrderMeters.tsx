@@ -4,8 +4,6 @@ import { Spin } from './Spin'
 export const OrderMeters = () => {
   const { orders, delivered, pending } = useOrders()
 
-  if (orders === null) return null
-
   return (
     <>
       <div className='h-full text-center text-gray-800'>

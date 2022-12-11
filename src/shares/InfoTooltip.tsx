@@ -1,18 +1,26 @@
 import { useEffect, useState } from 'react'
 
-interface Props {
+export interface InfoTooltipProps {
   status: 'success' | 'error'
   message?: string
   time?: number
+  autoClose?: boolean
 }
-export const InfoTooltip = ({ status, message, time }: Props) => {
+export const InfoTooltip = ({
+  status,
+  message,
+  time,
+  autoClose = true,
+}: InfoTooltipProps) => {
   const [show, setShow] = useState(true)
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShow(false)
-    }, time ?? 3000)
-  }, [])
+  if (autoClose) {
+    useEffect(() => {
+      setTimeout(() => {
+        setShow(false)
+      }, time ?? 3000)
+    }, [])
+  }
 
   const colorClass =
     status === 'error'

@@ -2,7 +2,7 @@ import { ProgressBar } from './ProgressBar'
 
 export const Report = () => {
   return (
-    <div className='flex flex-col items-center'>
+    <div className='flex flex-col items-center border-l border-gray-300 pr-2'>
       <h1 className='uppercase mb-4'>report</h1>
       <div className='flex justify-between w-full px-4 pb-5 border-b border-gray-300 text-gray-800 '>
         <div>
