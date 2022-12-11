@@ -24,3 +24,12 @@ jobs:
         run: yarn build
       - name: Test
         run: yarn test
+      - name: 'Deploy to Vercel'
+        run: |
+          prodRun=""
+          if [[ ${GITHUB_REF} == "refs/heads/main" ]]; then
+            prodRun="--prod"
+          fi 
+          npx vercel --token ${VERCEL_TOKEN} $prodRun
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
